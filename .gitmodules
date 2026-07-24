@@ -1,0 +1,3 @@
+[submodule "STAR-KV"]
+	path = STAR-KV
+	url = https://github.com/PriyanshBhatnagar/STAR-KV.git

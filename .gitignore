@@ -1,0 +1,20 @@
+# Secrets / env
+.env
+*.token
+
+# Local Python envs
+myenv/
+__pycache__/
+*.pyc
+
+# Model weights and large artifacts
+*.pt
+*.bin
+*.safetensors
+
+# Experiment tracking
+wandb/
+
+# OS cruft
+.DS_Store
+Thumbs.db
