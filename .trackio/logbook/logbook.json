@@ -5,7 +5,7 @@
   "space_id": "Devavrat28/star-kv",
   "paper": null,
   "tags": [],
-  "updated_at": "2026-07-24T10:19:58+00:00",
+  "updated_at": "2026-07-24T13:18:07+00:00",
   "root": {
     "slug": "index",
     "title": "Repro: STAR-KV: Low-Rank KV Cache Compression via Soft Thresholding for Adaptive Rank Control",
@@ -52,6 +52,12 @@
         "title": "Extended Analysis: Qwen2.5-3B + TurboQuant Metrics",
         "file": "pages/extended-analysis-qwen2-5-3b-turboquant-metrics/page.md",
         "children": []
+      },
+      {
+        "slug": "discrepancies-log",
+        "title": "Discrepancies Log",
+        "file": "pages/discrepancies-log/page.md",
+        "children": []
       }
     ]
   },
@@ -62,8 +68,8 @@
     "total_size": 0,
     "bucket_id": "Devavrat28/star-kv-artifacts"
   },
-  "agent_view_tokens": 3114,
+  "agent_view_tokens": 8266,
   "trace_view_tokens": 10,
   "workspace_view_tokens": 8,
-  "revision": "540dd04a13d04a3b97c9"
+  "revision": "206dcbf5fe0fb55acebf"
 }

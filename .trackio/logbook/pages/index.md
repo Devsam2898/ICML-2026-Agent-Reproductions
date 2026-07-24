@@ -5,9 +5,10 @@
 | Page | Status |
 | --- | --- |
 | [Environment Setup](#/environment-setup) | In progress |
-| [Claim 1: Perplexity (WikiText-2, C4)](#/claim-1-perplexity-wikitext-2-c4) | Pending |
-| [Claim 2: Zero-shot Accuracy](#/claim-2-zero-shot-accuracy) | Pending |
+| [Claim 1: Perplexity (WikiText-2, C4)](#/claim-1-perplexity-wikitext-2-c4) | Llama baseline done (PPL mismatch, see Discrepancies); LongChat baseline blocked |
+| [Claim 2: Zero-shot Accuracy](#/claim-2-zero-shot-accuracy) | Llama baseline done (see Discrepancies) |
 | [Claim 3: KV Cache Compression Ratio](#/claim-3-kv-cache-compression-ratio) | At risk (quant path broken) |
 | [Claim 4: Attention Speedup and E2E Throughput](#/claim-4-attention-speedup-and-e2e-throughput) | Blocked - kernel checks fail |
 | [Claim 5: LongBench and RULER](#/claim-5-longbench-and-ruler) | Pending |
 | [Extended Analysis: Qwen2.5-3B + TurboQuant Metrics](#/extended-analysis-qwen2-5-3b-turboquant-metrics) | Pending |
+| [Discrepancies Log](#/discrepancies-log) | 4 logged (2 env fixes applied, 2 open) |
