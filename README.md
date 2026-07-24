@@ -16,14 +16,15 @@ See `CLAUDE.md` for the full plan, commands, and known issues to watch for.
 |---|---|
 | Clone official repo into `STAR-KV/` (git submodule) | Done |
 | Add prior TurboQuant work as `Beyond-Perplexity-TurboQuant/` (git submodule) | Done |
-| Conda env `StarKV` (python 3.12.7) + requirements.txt | Pending |
-| HF_TOKEN / WANDB_API_KEY configured | Pending |
-| GPU verified (target: A100 40GB) | Pending |
-| Triton kernel smoke tests (`abx_rope_batched.py --check`, `bx_quant.py --check`) | Pending |
+| Conda env `StarKV` (python 3.12.7) + requirements.txt | N/A — using HF Jobs GPU instead (see below) |
+| HF_TOKEN / WANDB_API_KEY configured | Done (fine-grained token, write + job.write scopes) |
+| Trackio logbook published | Done — https://huggingface.co/spaces/Devavrat28/star-kv |
+| GPU compute path | HF Jobs (`hf jobs run --flavor a100-large`), billed against ICML-2026-agent-repro org credit |
+| Triton kernel smoke tests (`abx_rope_batched.py --check`, `bx_quant.py --check`) | **Both fail** — see below |
 | Claim 1: PPL (WikiText-2, C4) | Pending |
 | Claim 2: Zero-shot accuracy | Pending |
-| Claim 3: KV compression ratio | Pending |
-| Claim 4: Attention speedup / e2e throughput | Pending |
+| Claim 3: KV compression ratio | At risk — quantized path broken (see below) |
+| Claim 4: Attention speedup / e2e throughput | Blocked — kernel checks fail |
 | Claim 5: LongBench / RULER | Pending |
 | Extended analysis (Qwen2.5-3B + TurboQuant metrics) | Pending |
 
@@ -47,11 +48,32 @@ See `CLAUDE.md` for the full plan, commands, and known issues to watch for.
 
 Each entry should record: command run, GPU used and runtime, exact output numbers,
 comparison to the paper's reported numbers, and notes on any deviation or failure.
-Corresponding raw JSON output belongs in `results/`.
+Corresponding raw JSON output belongs in `results/`. Full detail lives in the
+[published Trackio logbook](https://huggingface.co/spaces/Devavrat28/star-kv); this
+section is a condensed pointer.
 
-### YYYY-MM-DD — Environment setup
+### 2026-07-24 — Environment setup
 
-- (fill in once conda env is created and GPU is verified)
+- No local GPU/conda; compute runs via `hf jobs run` on HF Jobs (A100, credit from
+  the ICML-2026-agent-repro org). Trackio logbook opened and published.
+
+### 2026-07-24 — Triton kernel correctness checks (Claim 4 pre-flight)
+
+- Job: `hf jobs run --flavor a100-large python:3.12 bash repro/kernel_check.sh`
+  ([job](https://huggingface.co/jobs/Devavrat28/6a633a27db23d7a7ec1ca3c3), 80s runtime, ~$0.06)
+- `abx_rope_batched.py --check`: **FAILS** —
+  `RuntimeError: Expected all tensors to be on the same device, but got mat2 is on
+  cpu, different from other tensors on cuda:0`, raised inside the `torch_abx()`
+  reference path at `rotary_emb(xb, position_ids)`.
+- `bx_quant.py --check`: **FAILS** — `ModuleNotFoundError: No module named
+  'quant_utils'`. `quant_utils.py` does not exist anywhere in the cloned repo
+  (confirmed via full-tree grep before running), yet both `bx_quant.py` and
+  `LlamaLoRaAttention_headwise_quant.py` import from it.
+- Confirms the upstream repo's own TODO ("Fix kernels for acc analysis") is real.
+  Not modifying `STAR-KV/` to patch this per project convention — logged as a
+  reproduction finding instead. Claim 4 (speedup/throughput) is blocked until
+  upstream fixes land; Claim 3's combined (low-rank + quantization) ratio is at
+  risk since the quantized attention path can't import.
 
 ---
 

@@ -1,0 +1,69 @@
+{
+  "schema_version": 2,
+  "title": "Repro: STAR-KV: Low-Rank KV Cache Compression via Soft Thresholding for Adaptive Rank Control",
+  "emoji": "🎯",
+  "space_id": "Devavrat28/star-kv",
+  "paper": null,
+  "tags": [],
+  "updated_at": "2026-07-24T10:19:58+00:00",
+  "root": {
+    "slug": "index",
+    "title": "Repro: STAR-KV: Low-Rank KV Cache Compression via Soft Thresholding for Adaptive Rank Control",
+    "file": "pages/index.md",
+    "children": [
+      {
+        "slug": "environment-setup",
+        "title": "Environment Setup",
+        "file": "pages/environment-setup/page.md",
+        "children": []
+      },
+      {
+        "slug": "claim-1-perplexity-wikitext-2-c4",
+        "title": "Claim 1: Perplexity (WikiText-2, C4)",
+        "file": "pages/claim-1-perplexity-wikitext-2-c4/page.md",
+        "children": []
+      },
+      {
+        "slug": "claim-2-zero-shot-accuracy",
+        "title": "Claim 2: Zero-shot Accuracy",
+        "file": "pages/claim-2-zero-shot-accuracy/page.md",
+        "children": []
+      },
+      {
+        "slug": "claim-3-kv-cache-compression-ratio",
+        "title": "Claim 3: KV Cache Compression Ratio",
+        "file": "pages/claim-3-kv-cache-compression-ratio/page.md",
+        "children": []
+      },
+      {
+        "slug": "claim-4-attention-speedup-and-e2e-throughput",
+        "title": "Claim 4: Attention Speedup and E2E Throughput",
+        "file": "pages/claim-4-attention-speedup-and-e2e-throughput/page.md",
+        "children": []
+      },
+      {
+        "slug": "claim-5-longbench-and-ruler",
+        "title": "Claim 5: LongBench and RULER",
+        "file": "pages/claim-5-longbench-and-ruler/page.md",
+        "children": []
+      },
+      {
+        "slug": "extended-analysis-qwen2-5-3b-turboquant-metrics",
+        "title": "Extended Analysis: Qwen2.5-3B + TurboQuant Metrics",
+        "file": "pages/extended-analysis-qwen2-5-3b-turboquant-metrics/page.md",
+        "children": []
+      }
+    ]
+  },
+  "traces": [],
+  "workspace": {
+    "file": "workspace.json",
+    "file_count": 0,
+    "total_size": 0,
+    "bucket_id": "Devavrat28/star-kv-artifacts"
+  },
+  "agent_view_tokens": 3114,
+  "trace_view_tokens": 10,
+  "workspace_view_tokens": 8,
+  "revision": "540dd04a13d04a3b97c9"
+}
