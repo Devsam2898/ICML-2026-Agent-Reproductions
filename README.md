@@ -14,7 +14,8 @@ See `CLAUDE.md` for the full plan, commands, and known issues to watch for.
 
 | Step | Status |
 |---|---|
-| Clone official repo into `STAR-KV/` | Done |
+| Clone official repo into `STAR-KV/` (git submodule) | Done |
+| Add prior TurboQuant work as `Beyond-Perplexity-TurboQuant/` (git submodule) | Done |
 | Conda env `StarKV` (python 3.12.7) + requirements.txt | Pending |
 | HF_TOKEN / WANDB_API_KEY configured | Pending |
 | GPU verified (target: A100 40GB) | Pending |
@@ -53,6 +54,15 @@ Corresponding raw JSON output belongs in `results/`.
 - (fill in once conda env is created and GPU is verified)
 
 ---
+
+## Extended Analysis Dependency
+
+`Beyond-Perplexity-TurboQuant/` (git submodule) holds the prior TurboQuant work
+referenced by CLAUDE.md's Extended Analysis section — `experiment_1.py` implements
+the 5 geometric metrics (attention KL divergence, per-layer sensitivity, norm vs
+direction error, token-position degradation, GQA cross-query consistency) to be run
+against STAR-KV's compressed Qwen2.5-3B outputs, to compare against the Layer 0
+key-norm heterogeneity finding from that project.
 
 ## Notes / Known Issues
 

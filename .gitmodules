@@ -1,3 +1,6 @@
 [submodule "STAR-KV"]
 	path = STAR-KV
 	url = https://github.com/PriyanshBhatnagar/STAR-KV.git
+[submodule "Beyond-Perplexity-TurboQuant"]
+	path = Beyond-Perplexity-TurboQuant
+	url = https://github.com/Devsam2898/Beyond-Perplexity-TurboQuant.git
