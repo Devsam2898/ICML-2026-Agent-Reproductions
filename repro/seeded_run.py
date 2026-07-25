@@ -28,4 +28,5 @@ print(f"[seeded_run] SEED={SEED}")
 
 target = sys.argv[1]
 sys.argv = sys.argv[1:]
+sys.path.insert(0, os.path.dirname(os.path.abspath(target)))
 runpy.run_path(target, run_name="__main__")
