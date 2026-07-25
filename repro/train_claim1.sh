@@ -28,6 +28,5 @@ python /workspace/repro/seeded_run.py train.py \
   --kd-weight 1.0 \
   --desired-comp-rate 0.6 \
   --phase3-samples 200 \
-  --cuda-devices 0 \
-  --wandb-project star-kv-repro
+  --cuda-devices 0
 echo "EXIT_TRAIN=$?"
