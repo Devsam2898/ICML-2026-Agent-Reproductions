@@ -59,3 +59,30 @@ Difference: python train.py (direct invocation) implicitly prepends train.py's d
 Likely cause: our own tooling bug (wrapper gap), not an upstream STAR-KV issue.
 Proposed fix: applied - seeded_run.py now does sys.path.insert(0, os.path.dirname(os.path.abspath(target))) before runpy.run_path. Verified fix against a minimal local reproduction before resubmitting.
 Impact on results: none on paper claims - only affected our determinism wrapper, not STAR-KV/train.py itself. Job resubmitted as 6a64eb397ef3c08464968896 (starkv-train-claim1-v3) with the fix.
+
+
+---
+<!-- trackio-cell
+{"type": "markdown", "id": "cell_761d6f141bdd", "created_at": "2026-07-25T18:00:55+00:00", "title": "DISCREPANCY FOUND"}
+-->
+**DISCREPANCY FOUND**
+Location: repro/train_claim1.sh --wandb-project flag / our WANDB_API_KEY
+Paper says: n/a - W&B is our own optional instrumentation choice, not a paper requirement.
+Code does: train.py's main() calls wandb.login(key=os.environ.get("WANDB_API_KEY", "")) then wandb.init(...) whenever --wandb-project is passed. Job starkv-train-claim1-v4 (6a64ed86db23d7a7ec1cc7b3) got past both prior bugs (sys.path fix, secret forwarding fix) and reached this step, but wandb.init() returned 401 CommError after wandb.login() had already reported "API key is configured".
+Likely cause: verified locally (wandb.login(key=..., verify=True)) that the current WANDB_API_KEY value in .env fails server-side authentication (AuthenticationError: "An error occurred while verifying the API key") - independent of our job/container setup. The key was rotated earlier this session; either the rotation didn't take effect as expected or the value pasted into .env doesn't match what's live on wandb.ai.
+Proposed fix: --wandb-project removed from repro/train_claim1.sh for now (wandb is optional instrumentation per train.py's own code path - no paper claim depends on it). Training resubmitted without it. W&B key troubleshooting deferred to the user, not blocking reproduction.
+Impact on results: none - loss/metrics will be captured from job stdout logs instead of a W&B dashboard for this run.
+
+
+---
+<!-- trackio-cell
+{"type": "markdown", "id": "cell_35b4b4e6f8c6", "created_at": "2026-07-25T18:25:40+00:00", "title": "DISCREPANCY FOUND"}
+-->
+**DISCREPANCY FOUND**
+Location: STAR-KV/train.py (no gradient_checkpointing_enable() anywhere) vs. SKILLS.md Hardware Requirements section (lines ~182, ~360)
+Paper says (SKILLS.md): "Threshold learning / calibration" step used 2x NVIDIA RTX PRO 6000 (96GB each); total training time ~6 GPU hours. Elsewhere SKILLS.md also recommends requesting only 1x RTX PRO 6000 on HuggingFace and estimates activations at seq_len 8192 as "~8-12GB", implying single-GPU should be sufficient.
+Code does: train.py loads both student and teacher (both Llama-3.1-8B, bf16) with no gradient checkpointing, use_cache=False. First training step OOMs on a single RTX PRO 6000 (94.97GB usable) with ~95GB already allocated before the kd_loss computation - job 6a64fdef7ef3c08464968d5f (starkv-train-claim1-v5), OOM at Epoch 1 step 0, seq_len=8192, batch_size=1 (default).
+Difference: SKILLS.md's own single-GPU activation estimate (8-12GB) is far below what's actually needed for a full backward pass through all 32 transformer layers without checkpointing - it likely reflects inference-only forward activation footprint, not backprop storage. The authors' own hardware line for this exact step lists 2 GPUs, which is internally consistent with what we observed empirically (1 GPU is not enough as shipped).
+Likely cause: Implementation gap (missing gradient checkpointing support in train.py) combined with an optimistic single-GPU memory estimate in the ground-truth doc.
+Proposed fix: applied - repro/compat_shim.py now patches LlamaForCausalLM.from_pretrained (gated by REPRO_GRAD_CKPT=1, set only in train_claim1.sh) to call model.gradient_checkpointing_enable(gradient_checkpointing_kwargs={"use_reentrant": False}) on every loaded model. This is a compute/memory tradeoff only (recompute vs. store activations during backward) - mathematically identical to the unmodified forward/backward pass, so it should not change training results, only reduce peak memory. No-op for the teacher (loaded via the same patched from_pretrained, but kept in .eval() mode under torch.no_grad() so checkpointing never actually triggers for it). STAR-KV/train.py itself is not modified. Verified the classmethod-patching mechanism works correctly in isolation before resubmitting.
+Impact on results: expected none on final metrics (checkpointing is a standard, results-preserving memory optimization); avoids provisioning more expensive 2-GPU hardware. Will confirm no numerical impact once training completes by comparing loss curve shape/final loss against what would be expected from the paper's own ~6 GPU-hour training budget.

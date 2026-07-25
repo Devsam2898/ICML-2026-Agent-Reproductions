@@ -277,3 +277,66 @@ Hint: Use `hf jobs logs -f Devavrat28/6a64eb397ef3c08464968896` to stream logs, 
 Hint: Use `hf jobs wait Devavrat28/6a64eb397ef3c08464968896` to block until it finishes.
 
 ````
+
+
+---
+<!-- trackio-cell
+{"type": "code", "id": "cell_e63404a1f8ec", "created_at": "2026-07-25T17:08:22+00:00", "title": "Run: hf.exe (exit 0)", "command": ["./myenv/Scripts/hf.exe", "jobs", "run", "--flavor", "rtx-pro-6000", "--timeout", "4h", "--name", "starkv-train-claim1-v4", "--secrets", "HF_TOKEN", "--secrets", "WANDB_API_KEY", "-v", "./STAR-KV:/workspace/STAR-KV:ro", "-v", "./repro:/workspace/repro:ro", "-v", "hf://buckets/Devavrat28/star-kv-checkpoints:/workspace/output:rw", "-d", "python:3.12", "bash", "/workspace/repro/train_claim1.sh"], "exit_code": 0, "duration_s": 7.782}
+-->
+````bash
+$ ./myenv/Scripts/hf.exe jobs run --flavor rtx-pro-6000 --timeout 4h --name starkv-train-claim1-v4 --secrets HF_TOKEN --secrets WANDB_API_KEY -v ./STAR-KV:/workspace/STAR-KV:ro -v ./repro:/workspace/repro:ro -v hf://buckets/Devavrat28/star-kv-checkpoints:/workspace/output:rw -d python:3.12 bash /workspace/repro/train_claim1.sh
+````
+
+exit 0 · 7.8s
+
+
+````output
+Sync plan: STAR-KV -> hf://buckets/Devavrat28/jobs-artifacts/STAR-KV-a5c24ba8
+  Uploads: 0
+  Downloads: 0
+  Deletes: 0
+  Skips: 13
+Nothing to sync.
+Sync plan: repro -> hf://buckets/Devavrat28/jobs-artifacts/repro-9203359a
+  Uploads: 0
+  Downloads: 0
+  Deletes: 0
+  Skips: 7
+Nothing to sync.
+id=6a64ed86db23d7a7ec1cc7b3 url=https://huggingface.co/jobs/Devavrat28/6a64ed86db23d7a7ec1cc7b3
+Hint: Use `hf jobs logs -f Devavrat28/6a64ed86db23d7a7ec1cc7b3` to stream logs, or `hf jobs inspect Devavrat28/6a64ed86db23d7a7ec1cc7b3` to check status.
+Hint: Use `hf jobs wait Devavrat28/6a64ed86db23d7a7ec1cc7b3` to block until it finishes.
+
+````
+
+
+---
+<!-- trackio-cell
+{"type": "code", "id": "cell_c911a130e115", "created_at": "2026-07-25T18:18:23+00:00", "title": "Run: hf.exe (exit 0)", "command": ["./myenv/Scripts/hf.exe", "jobs", "run", "--flavor", "rtx-pro-6000", "--timeout", "4h", "--name", "starkv-train-claim1-v5", "--secrets", "HF_TOKEN", "-v", "./STAR-KV:/workspace/STAR-KV:ro", "-v", "./repro:/workspace/repro:ro", "-v", "hf://buckets/Devavrat28/star-kv-checkpoints:/workspace/output:rw", "-d", "python:3.12", "bash", "/workspace/repro/train_claim1.sh"], "exit_code": 0, "duration_s": 14.782}
+-->
+````bash
+$ ./myenv/Scripts/hf.exe jobs run --flavor rtx-pro-6000 --timeout 4h --name starkv-train-claim1-v5 --secrets HF_TOKEN -v ./STAR-KV:/workspace/STAR-KV:ro -v ./repro:/workspace/repro:ro -v hf://buckets/Devavrat28/star-kv-checkpoints:/workspace/output:rw -d python:3.12 bash /workspace/repro/train_claim1.sh
+````
+
+exit 0 · 14.8s
+
+
+````output
+Sync plan: STAR-KV -> hf://buckets/Devavrat28/jobs-artifacts/STAR-KV-a5c24ba8
+  Uploads: 0
+  Downloads: 0
+  Deletes: 0
+  Skips: 13
+Nothing to sync.
+Sync plan: repro -> hf://buckets/Devavrat28/jobs-artifacts/repro-9203359a
+  Uploads: 1
+  Downloads: 0
+  Deletes: 0
+  Skips: 6
+Syncing...
+Sync completed.
+id=6a64fdef7ef3c08464968d5f url=https://huggingface.co/jobs/Devavrat28/6a64fdef7ef3c08464968d5f
+Hint: Use `hf jobs logs -f Devavrat28/6a64fdef7ef3c08464968d5f` to stream logs, or `hf jobs inspect Devavrat28/6a64fdef7ef3c08464968d5f` to check status.
+Hint: Use `hf jobs wait Devavrat28/6a64fdef7ef3c08464968d5f` to block until it finishes.
+
+````
