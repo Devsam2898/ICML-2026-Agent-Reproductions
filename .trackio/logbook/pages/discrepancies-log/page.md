@@ -86,3 +86,17 @@ Difference: SKILLS.md's own single-GPU activation estimate (8-12GB) is far below
 Likely cause: Implementation gap (missing gradient checkpointing support in train.py) combined with an optimistic single-GPU memory estimate in the ground-truth doc.
 Proposed fix: applied - repro/compat_shim.py now patches LlamaForCausalLM.from_pretrained (gated by REPRO_GRAD_CKPT=1, set only in train_claim1.sh) to call model.gradient_checkpointing_enable(gradient_checkpointing_kwargs={"use_reentrant": False}) on every loaded model. This is a compute/memory tradeoff only (recompute vs. store activations during backward) - mathematically identical to the unmodified forward/backward pass, so it should not change training results, only reduce peak memory. No-op for the teacher (loaded via the same patched from_pretrained, but kept in .eval() mode under torch.no_grad() so checkpointing never actually triggers for it). STAR-KV/train.py itself is not modified. Verified the classmethod-patching mechanism works correctly in isolation before resubmitting.
 Impact on results: expected none on final metrics (checkpointing is a standard, results-preserving memory optimization); avoids provisioning more expensive 2-GPU hardware. Will confirm no numerical impact once training completes by comparing loss curve shape/final loss against what would be expected from the paper's own ~6 GPU-hour training budget.
+
+
+---
+<!-- trackio-cell
+{"type": "markdown", "id": "cell_a068ab15e5a3", "created_at": "2026-07-25T18:51:15+00:00", "title": "DISCREPANCY FOUND (update)"}
+-->
+**DISCREPANCY FOUND (update)**
+Location: STAR-KV/train.py optimizer construction (lines ~339-360)
+Paper says: n/a directly, but SKILLS.md's own hardware table says the "Threshold learning / calibration" step used 2x RTX PRO 6000.
+Code does: the main AdamW param group is `[p for n, p in model.named_parameters() if not any(nd in n for nd in no_decay) and "alpha" not in n]` - i.e. every parameter that isn't a bias/layernorm and isn't named "alpha" gets full-lr AdamW state. This is full fine-tuning of the entire 8B student (not just the injected low-rank/alpha adapters), so AdamW's exp_avg/exp_avg_sq buffers apply to essentially the whole model, on top of the frozen 8B teacher.
+Difference: gradient checkpointing (previous fix) only delayed the crash from step 0 to global_step 3, and the actual OOM moved to optimizer.step() (torch.optim.adam._multi_tensor_adam computing exp_avg_sq_sqrt) - confirming the bottleneck is optimizer state, not activation memory. A single 96GB GPU cannot hold: frozen teacher (~16GB) + student weights (~16GB) + student gradients + AdamW state for a full 8B fine-tune + any residual activations, even with checkpointing.
+Likely cause: this genuinely requires 2 GPUs as the authors used - not a bug, a resource requirement inherent to the training design (KD + full fine-tune, not LoRA-style partial training).
+Proposed fix: scale to rtx-pro-6000x2 (2x96GB=192GB, $5.50/hr) and drop our --cuda-devices override so train.py falls back to its own default ("0,1"), letting accelerate's device_map=auto shard both models across both GPUs - this exactly matches the authors' documented hardware rather than working around it. Gradient checkpointing left enabled for extra margin.
+Impact on results: none expected - same training config/hyperparameters, just correct hardware parallelism. Confirmed with user before incurring the added ~$16-22 cost (vs. pennies for the failed single-GPU attempts).
