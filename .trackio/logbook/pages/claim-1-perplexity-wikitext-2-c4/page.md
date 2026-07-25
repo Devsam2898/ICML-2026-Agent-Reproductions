@@ -17,10 +17,10 @@ Pre-flight: gated-model access to meta-llama/Llama-3.1-8B-Instruct confirmed (co
 
 ---
 <!-- trackio-cell
-{"type": "code", "id": "cell_a11028cfc93f", "created_at": "2026-07-24T10:52:38+00:00", "title": "Run: hf.exe (exit 1)", "command": ["./myenv/Scripts/hf.exe", "jobs", "run", "--flavor", "a100-large", "--timeout", "4h", "--name", "starkv-train-claim1", "--secrets", "HF_TOKEN", "--secrets", "WANDB_API_KEY=***REDACTED-WANDB-KEY***", "-v", ".\\STAR-KV;C:\\Users\\devavrat.samak\\AppData\\Local\\Programs\\Git\\workspace\\STAR-KV;ro", "-v", ".\\repro;C:\\Users\\devavrat.samak\\AppData\\Local\\Programs\\Git\\workspace\\repro;ro", "-v", "hf://buckets/Devavrat28/star-kv-checkpoints:/workspace/output:rw", "-d", "python:3.12", "bash", "C:/Users/devavrat.samak/AppData/Local/Programs/Git/workspace/repro/train_claim1.sh"], "exit_code": 1, "duration_s": 3.328}
+{"type": "code", "id": "cell_a11028cfc93f", "created_at": "2026-07-24T10:52:38+00:00", "title": "Run: hf.exe (exit 1)", "command": ["./myenv/Scripts/hf.exe", "jobs", "run", "--flavor", "a100-large", "--timeout", "4h", "--name", "starkv-train-claim1", "--secrets", "HF_TOKEN", "--secrets", "WANDB_API_KEY=***REDACTED***", "-v", ".\\STAR-KV;C:\\Users\\devavrat.samak\\AppData\\Local\\Programs\\Git\\workspace\\STAR-KV;ro", "-v", ".\\repro;C:\\Users\\devavrat.samak\\AppData\\Local\\Programs\\Git\\workspace\\repro;ro", "-v", "hf://buckets/Devavrat28/star-kv-checkpoints:/workspace/output:rw", "-d", "python:3.12", "bash", "C:/Users/devavrat.samak/AppData/Local/Programs/Git/workspace/repro/train_claim1.sh"], "exit_code": 1, "duration_s": 3.328}
 -->
 ````bash
-$ ./myenv/Scripts/hf.exe jobs run --flavor a100-large --timeout 4h --name starkv-train-claim1 --secrets HF_TOKEN --secrets WANDB_API_KEY=***REDACTED-WANDB-KEY*** -v '.\STAR-KV;C:\Users\devavrat.samak\AppData\Local\Programs\Git\workspace\STAR-KV;ro' -v '.\repro;C:\Users\devavrat.samak\AppData\Local\Programs\Git\workspace\repro;ro' -v hf://buckets/Devavrat28/star-kv-checkpoints:/workspace/output:rw -d python:3.12 bash C:/Users/devavrat.samak/AppData/Local/Programs/Git/workspace/repro/train_claim1.sh
+$ ./myenv/Scripts/hf.exe jobs run --flavor a100-large --timeout 4h --name starkv-train-claim1 --secrets HF_TOKEN --secrets WANDB_API_KEY=***REDACTED*** -v '.\STAR-KV;C:\Users\devavrat.samak\AppData\Local\Programs\Git\workspace\STAR-KV;ro' -v '.\repro;C:\Users\devavrat.samak\AppData\Local\Programs\Git\workspace\repro;ro' -v hf://buckets/Devavrat28/star-kv-checkpoints:/workspace/output:rw -d python:3.12 bash C:/Users/devavrat.samak/AppData/Local/Programs/Git/workspace/repro/train_claim1.sh
 ````
 
 exit 1 · 3.3s
@@ -35,10 +35,10 @@ Hint: set HF_DEBUG=1 as environment variable for full traceback.
 
 ---
 <!-- trackio-cell
-{"type": "code", "id": "cell_22481f2a4563", "created_at": "2026-07-24T10:58:05+00:00", "title": "Run: hf.exe (exit 1)", "command": ["./myenv/Scripts/hf.exe", "jobs", "run", "--flavor", "a100-large", "--timeout", "4h", "--name", "starkv-train-claim1", "--secrets", "HF_TOKEN", "--secrets", "WANDB_API_KEY=***REDACTED-WANDB-KEY***", "-v", "./STAR-KV:/workspace/STAR-KV:ro", "-v", "./repro:/workspace/repro:ro", "-v", "hf://buckets/Devavrat28/star-kv-checkpoints:/workspace/output:rw", "-d", "python:3.12", "bash", "/workspace/repro/train_claim1.sh"], "exit_code": 1, "duration_s": 12.766}
+{"type": "code", "id": "cell_22481f2a4563", "created_at": "2026-07-24T10:58:05+00:00", "title": "Run: hf.exe (exit 1)", "command": ["./myenv/Scripts/hf.exe", "jobs", "run", "--flavor", "a100-large", "--timeout", "4h", "--name", "starkv-train-claim1", "--secrets", "HF_TOKEN", "--secrets", "WANDB_API_KEY=***REDACTED***", "-v", "./STAR-KV:/workspace/STAR-KV:ro", "-v", "./repro:/workspace/repro:ro", "-v", "hf://buckets/Devavrat28/star-kv-checkpoints:/workspace/output:rw", "-d", "python:3.12", "bash", "/workspace/repro/train_claim1.sh"], "exit_code": 1, "duration_s": 12.766}
 -->
 ````bash
-$ ./myenv/Scripts/hf.exe jobs run --flavor a100-large --timeout 4h --name starkv-train-claim1 --secrets HF_TOKEN --secrets WANDB_API_KEY=***REDACTED-WANDB-KEY*** -v ./STAR-KV:/workspace/STAR-KV:ro -v ./repro:/workspace/repro:ro -v hf://buckets/Devavrat28/star-kv-checkpoints:/workspace/output:rw -d python:3.12 bash /workspace/repro/train_claim1.sh
+$ ./myenv/Scripts/hf.exe jobs run --flavor a100-large --timeout 4h --name starkv-train-claim1 --secrets HF_TOKEN --secrets WANDB_API_KEY=***REDACTED*** -v ./STAR-KV:/workspace/STAR-KV:ro -v ./repro:/workspace/repro:ro -v hf://buckets/Devavrat28/star-kv-checkpoints:/workspace/output:rw -d python:3.12 bash /workspace/repro/train_claim1.sh
 ````
 
 exit 1 · 12.8s
@@ -68,10 +68,10 @@ Sync completed.
 
 ---
 <!-- trackio-cell
-{"type": "code", "id": "cell_075bf357b370", "created_at": "2026-07-24T11:08:36+00:00", "title": "Run: hf.exe (exit 0)", "command": ["./myenv/Scripts/hf.exe", "jobs", "run", "--flavor", "a100-large", "--timeout", "4h", "--name", "starkv-train-claim1", "--secrets", "HF_TOKEN", "--secrets", "WANDB_API_KEY=***REDACTED-WANDB-KEY***", "-v", "./STAR-KV:/workspace/STAR-KV:ro", "-v", "./repro:/workspace/repro:ro", "-v", "hf://buckets/Devavrat28/star-kv-checkpoints:/workspace/output:rw", "-d", "python:3.12", "bash", "/workspace/repro/train_claim1.sh"], "exit_code": 0, "duration_s": 10.5}
+{"type": "code", "id": "cell_075bf357b370", "created_at": "2026-07-24T11:08:36+00:00", "title": "Run: hf.exe (exit 0)", "command": ["./myenv/Scripts/hf.exe", "jobs", "run", "--flavor", "a100-large", "--timeout", "4h", "--name", "starkv-train-claim1", "--secrets", "HF_TOKEN", "--secrets", "WANDB_API_KEY=***REDACTED***", "-v", "./STAR-KV:/workspace/STAR-KV:ro", "-v", "./repro:/workspace/repro:ro", "-v", "hf://buckets/Devavrat28/star-kv-checkpoints:/workspace/output:rw", "-d", "python:3.12", "bash", "/workspace/repro/train_claim1.sh"], "exit_code": 0, "duration_s": 10.5}
 -->
 ````bash
-$ ./myenv/Scripts/hf.exe jobs run --flavor a100-large --timeout 4h --name starkv-train-claim1 --secrets HF_TOKEN --secrets WANDB_API_KEY=***REDACTED-WANDB-KEY*** -v ./STAR-KV:/workspace/STAR-KV:ro -v ./repro:/workspace/repro:ro -v hf://buckets/Devavrat28/star-kv-checkpoints:/workspace/output:rw -d python:3.12 bash /workspace/repro/train_claim1.sh
+$ ./myenv/Scripts/hf.exe jobs run --flavor a100-large --timeout 4h --name starkv-train-claim1 --secrets HF_TOKEN --secrets WANDB_API_KEY=***REDACTED*** -v ./STAR-KV:/workspace/STAR-KV:ro -v ./repro:/workspace/repro:ro -v hf://buckets/Devavrat28/star-kv-checkpoints:/workspace/output:rw -d python:3.12 bash /workspace/repro/train_claim1.sh
 ````
 
 exit 0 · 10.5s
@@ -206,3 +206,42 @@ Impact on results: this sets our own baseline reference point (Wiki2=7.21, C4=11
 {"type": "markdown", "id": "cell_319a6a2c33c8", "created_at": "2026-07-24T13:17:24+00:00", "title": "LongChat-7B-v1.5-32k baseline: still blocked (2nd attempt, job https://huggingf…"}
 -->
 **LongChat-7B-v1.5-32k baseline: still blocked** (2nd attempt, job https://huggingface.co/jobs/Devavrat28/6a636385db23d7a7ec1ca87f). After adding tiktoken, the error changed: ValueError: Error parsing line b'\x0e' in tokenizer.model - i.e. transformers is now attempting to parse LongChat's sentencepiece-format tokenizer.model as a tiktoken BPE file, which fails on the binary sentencepiece bytes. LongChat/Vicuna-family tokenizers are sentencepiece-based, not tiktoken-based; tiktoken should not be involved in loading this tokenizer at all. Likely cause: Version issue - transformers 5.14.1 (latest, unpinned by STAR-KV/requirements.txt) appears to have changed its fast-tokenizer auto-detection/conversion path in a way that misroutes this model's tokenizer_class. Proposed next attempt (not yet run): AutoTokenizer.from_pretrained(model, use_fast=False) to force the slow/sentencepiece path and skip whatever fast-tokenizer conversion is misfiring - cheap to test in a follow-up job. LongChat is priority-order item 1-2 in EXPECTED_RESULTS.md (before Llama-3.1-8B), so this blocks that specific priority ordering until resolved.
+
+
+---
+<!-- trackio-cell
+{"type": "markdown", "id": "cell_c2db96c9d2c9", "created_at": "2026-07-24T13:20:06+00:00", "title": "Decision: baseline PPL/zero-shot mismatch (documented above) accepted as a vers…"}
+-->
+Decision: baseline PPL/zero-shot mismatch (documented above) accepted as a version-drift discrepancy, not investigated further for now. Proceeding to STAR-KV training (60% compression) on the corrected hardware (rtx-pro-6000). Our own baseline numbers (Wiki2=7.21, C4=11.40, avg zero-shot=68.49%) will be the primary reference point for judging the compressed model's deltas in this environment, alongside the paper's absolute numbers.
+
+
+---
+<!-- trackio-cell
+{"type": "code", "id": "cell_76731886ee57", "created_at": "2026-07-24T13:20:45+00:00", "title": "Run: hf.exe (exit 0)", "command": ["./myenv/Scripts/hf.exe", "jobs", "run", "--flavor", "rtx-pro-6000", "--timeout", "4h", "--name", "starkv-train-claim1-v2", "--secrets", "HF_TOKEN", "--secrets", "WANDB_API_KEY=***REDACTED***", "-v", "./STAR-KV:/workspace/STAR-KV:ro", "-v", "./repro:/workspace/repro:ro", "-v", "hf://buckets/Devavrat28/star-kv-checkpoints:/workspace/output:rw", "-d", "python:3.12", "bash", "/workspace/repro/train_claim1.sh"], "exit_code": 0, "duration_s": 10.813}
+-->
+````bash
+$ ./myenv/Scripts/hf.exe jobs run --flavor rtx-pro-6000 --timeout 4h --name starkv-train-claim1-v2 --secrets HF_TOKEN --secrets WANDB_API_KEY=***REDACTED*** -v ./STAR-KV:/workspace/STAR-KV:ro -v ./repro:/workspace/repro:ro -v hf://buckets/Devavrat28/star-kv-checkpoints:/workspace/output:rw -d python:3.12 bash /workspace/repro/train_claim1.sh
+````
+
+exit 0 · 10.8s
+
+
+````output
+Sync plan: STAR-KV -> hf://buckets/Devavrat28/jobs-artifacts/STAR-KV-a5c24ba8
+  Uploads: 0
+  Downloads: 0
+  Deletes: 0
+  Skips: 13
+Nothing to sync.
+Sync plan: repro -> hf://buckets/Devavrat28/jobs-artifacts/repro-9203359a
+  Uploads: 1
+  Downloads: 0
+  Deletes: 0
+  Skips: 6
+Syncing...
+Sync completed.
+id=6a6366addb23d7a7ec1ca8ba url=https://huggingface.co/jobs/Devavrat28/6a6366addb23d7a7ec1ca8ba
+Hint: Use `hf jobs logs -f Devavrat28/6a6366addb23d7a7ec1ca8ba` to stream logs, or `hf jobs inspect Devavrat28/6a6366addb23d7a7ec1ca8ba` to check status.
+Hint: Use `hf jobs wait Devavrat28/6a6366addb23d7a7ec1ca8ba` to block until it finishes.
+
+````
