@@ -45,3 +45,17 @@ Impact on results: none on compressed-model numbers; without this wrapper we wou
 1. lmsys/longchat-7b-v1.5-32k tokenizer load failed: ModuleNotFoundError: No module named 'tiktoken' (then ValueError requiring tiktoken to read a tiktoken file). requirements.txt does not list tiktoken as a transitive dependency of this tokenizer. Fix: add tiktoken (and sentencepiece, for parity) to the install list in our job scripts - not a change to STAR-KV/ itself, just our own environment setup script.
 
 2. Llama-3.1-8B baseline model loaded fine, but evaluate_ppl -> _get_ppl_data('wikitext2', ...) -> load_dataset('wikitext', 'wikitext-2-raw-v1') raised huggingface_hub.errors.HfUriError: 'Repository id must be namespace/name, got wikitext'. The unpinned latest 'datasets' package (5.0.0 in this environment) no longer resolves the bare legacy dataset id STAR-KV/eval.py hardcodes at line 56. This is the 'Version mismatch' failure mode SKILLS.md explicitly warns about. Per protocol, not modifying STAR-KV/eval.py. Fix: repro/compat_shim.py monkeypatches datasets.load_dataset to redirect 'wikitext' -> 'Salesforce/wikitext' (falling back to the original id if that alias fails), imported before eval.py/train.py in both repro/baseline_eval.py and repro/seeded_run.py so it also covers the real (non-baseline) eval.py runs later.
+
+
+---
+<!-- trackio-cell
+{"type": "markdown", "id": "cell_0f7aac0d452b", "created_at": "2026-07-25T17:00:10+00:00", "title": "DISCREPANCY FOUND"}
+-->
+**DISCREPANCY FOUND**
+Location: repro/seeded_run.py (our own wrapper, not STAR-KV/)
+Paper says: n/a - bug in our reproduction tooling, not the paper or repo.
+Code does: seeded_run.py called runpy.run_path(target, run_name="__main__") without adding the target script's own directory to sys.path first.
+Difference: python train.py (direct invocation) implicitly prepends train.py's directory to sys.path, letting its sibling import (from model import ...) resolve. runpy.run_path does not do this automatically - confirmed empirically with a minimal repro. Training job 6a6366addb23d7a7ec1ca8ba failed after 75s with ModuleNotFoundError: No module named 'model', before any real training occurred.
+Likely cause: our own tooling bug (wrapper gap), not an upstream STAR-KV issue.
+Proposed fix: applied - seeded_run.py now does sys.path.insert(0, os.path.dirname(os.path.abspath(target))) before runpy.run_path. Verified fix against a minimal local reproduction before resubmitting.
+Impact on results: none on paper claims - only affected our determinism wrapper, not STAR-KV/train.py itself. Job resubmitted as 6a64eb397ef3c08464968896 (starkv-train-claim1-v3) with the fix.
