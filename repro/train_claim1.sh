@@ -9,8 +9,9 @@ print('PyTorch:', torch.__version__)
 print('CUDA (torch):', torch.version.cuda)
 print('Triton:', triton.__version__)
 print('Transformers:', transformers.__version__)
-print('GPU:', torch.cuda.get_device_name(0))
-print('VRAM (GB):', torch.cuda.get_device_properties(0).total_memory / 1e9)
+print('GPU count:', torch.cuda.device_count())
+for _i in range(torch.cuda.device_count()):
+    print(f'GPU {_i}:', torch.cuda.get_device_name(_i), '-', torch.cuda.get_device_properties(_i).total_memory / 1e9, 'GB')
 "
 echo "STAR-KV commit: 1bcdc0041a32cb4adf0a43320f7d090413595479"
 echo "REPRO_SEED: ${REPRO_SEED:-42}"
@@ -28,6 +29,5 @@ python /workspace/repro/seeded_run.py train.py \
   --comp-weight-k 0.1 --comp-weight-v 0.1 \
   --kd-weight 1.0 \
   --desired-comp-rate 0.6 \
-  --phase3-samples 200 \
-  --cuda-devices 0
+  --phase3-samples 200
 echo "EXIT_TRAIN=$?"
