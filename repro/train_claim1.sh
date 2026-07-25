@@ -18,6 +18,7 @@ echo "REPRO_SEED: ${REPRO_SEED:-42}"
 mkdir -p /workspace/output
 cd /workspace/STAR-KV
 
+export REPRO_GRAD_CKPT=1
 python /workspace/repro/seeded_run.py train.py \
   --model meta-llama/Llama-3.1-8B-Instruct \
   --output /workspace/output/trained_weights.pt \
