@@ -1,6 +1,6 @@
 #!/bin/bash
 set -x
-pip install --no-cache-dir torch triton transformers datasets accelerate evaluate huggingface_hub wandb tqdm
+pip install --no-cache-dir torch triton transformers datasets accelerate evaluate huggingface_hub wandb tqdm tiktoken sentencepiece protobuf
 
 python -c "
 import sys, torch, triton, transformers

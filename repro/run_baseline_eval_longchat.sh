@@ -1,6 +1,6 @@
 #!/bin/bash
 set -x
-pip install --no-cache-dir torch triton transformers datasets accelerate evaluate huggingface_hub "lm_eval[longbench,ruler]" tqdm tiktoken sentencepiece
+pip install --no-cache-dir torch triton transformers datasets accelerate evaluate huggingface_hub "lm_eval[longbench,ruler]" tqdm tiktoken sentencepiece protobuf
 
 python -c "
 import sys, torch, triton, transformers, tokenizers, huggingface_hub
@@ -20,7 +20,7 @@ echo "REPRO_SEED: ${REPRO_SEED:-42}"
 mkdir -p /workspace/output
 cd /workspace/repro
 
-echo "=== Baseline: LongChat-7B-v1.5-32k (retry - prior 2 attempts failed on tokenizer loading) ==="
+echo "=== Baseline: LongChat-7B-v1.5-32k (retry #2 - missing protobuf caused SentencePieceExtractor to fail and silently mis-fall-back to a broken TikToken parse; see Discrepancies Log) ==="
 python baseline_eval.py \
   --model lmsys/longchat-7b-v1.5-32k \
   --ppl-datasets wikitext2,c4 \
