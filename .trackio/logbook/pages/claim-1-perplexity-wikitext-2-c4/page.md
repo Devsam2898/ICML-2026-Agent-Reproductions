@@ -372,3 +372,54 @@ Hint: Use `hf jobs logs -f Devavrat28/6a6500f7db23d7a7ec1ccd29` to stream logs, 
 Hint: Use `hf jobs wait Devavrat28/6a6500f7db23d7a7ec1ccd29` to block until it finishes.
 
 ````
+
+
+---
+<!-- trackio-cell
+{"type": "code", "id": "cell_8296a7597dc2", "created_at": "2026-07-25T18:52:10+00:00", "title": "Run: hf.exe (exit 0)", "command": ["./myenv/Scripts/hf.exe", "jobs", "run", "--flavor", "rtx-pro-6000x2", "--timeout", "4h", "--name", "starkv-train-claim1-v7", "--secrets", "HF_TOKEN", "-v", "./STAR-KV:/workspace/STAR-KV:ro", "-v", "./repro:/workspace/repro:ro", "-v", "hf://buckets/Devavrat28/star-kv-checkpoints:/workspace/output:rw", "-d", "python:3.12", "bash", "/workspace/repro/train_claim1.sh"], "exit_code": 0, "duration_s": 13.203}
+-->
+````bash
+$ ./myenv/Scripts/hf.exe jobs run --flavor rtx-pro-6000x2 --timeout 4h --name starkv-train-claim1-v7 --secrets HF_TOKEN -v ./STAR-KV:/workspace/STAR-KV:ro -v ./repro:/workspace/repro:ro -v hf://buckets/Devavrat28/star-kv-checkpoints:/workspace/output:rw -d python:3.12 bash /workspace/repro/train_claim1.sh
+````
+
+exit 0 · 13.2s
+
+
+````output
+Sync plan: STAR-KV -> hf://buckets/Devavrat28/jobs-artifacts/STAR-KV-a5c24ba8
+  Uploads: 0
+  Downloads: 0
+  Deletes: 0
+  Skips: 13
+Nothing to sync.
+Sync plan: repro -> hf://buckets/Devavrat28/jobs-artifacts/repro-9203359a
+  Uploads: 1
+  Downloads: 0
+  Deletes: 0
+  Skips: 6
+Syncing...
+Sync completed.
+id=6a6505dadb23d7a7ec1cced8 url=https://huggingface.co/jobs/Devavrat28/6a6505dadb23d7a7ec1cced8
+Hint: Use `hf jobs logs -f Devavrat28/6a6505dadb23d7a7ec1cced8` to stream logs, or `hf jobs inspect Devavrat28/6a6505dadb23d7a7ec1cced8` to check status.
+Hint: Use `hf jobs wait Devavrat28/6a6505dadb23d7a7ec1cced8` to block until it finishes.
+
+````
+
+
+---
+<!-- trackio-cell
+{"type": "markdown", "id": "cell_788beb22bea5", "created_at": "2026-07-26T05:42:21+00:00", "title": "Training succeeded (job https://huggingface.co/jobs/Devavrat28/6a6505dadb23d7a7…"}
+-->
+**Training succeeded** (job https://huggingface.co/jobs/Devavrat28/6a6505dadb23d7a7ec1cced8, starkv-train-claim1-v7, rtx-pro-6000x2 [2x96GB], seed=42, gradient checkpointing on, running_secs=13594 (~3h47m), cost ~$5.50/hr * 3.78h = ~$20.79).
+
+Command: `train.py --model meta-llama/Llama-3.1-8B-Instruct --epochs 1 --lr 2e-5 --seq-len 8192 --num-samples 4000 --alpha-lr 1e-2 --alpha-samples 3000 --comp-weight-k 0.1 --comp-weight-v 0.1 --kd-weight 1.0 --desired-comp-rate 0.6 --phase3-samples 200` (via repro/seeded_run.py, REPRO_GRAD_CKPT=1, --cuda-devices defaulted to STAR-KV's own "0,1").
+
+**Phase 1** (alpha-samples=3000, ended via step-count fallback, not budget-reached): loss 20.50 (step 100) -> 3.61 (step 3000). Final K_comp=61.95% (target 69%), V_comp=49.33% (target 49%, reached/frozen at step 392 per "[V frozen]" log line).
+**Phase 2** (steps 3100-4000, KD-only recovery): loss stabilized 0.13-0.20 (pure KD loss once comp losses dropped).
+**Phase 3** (phase3-samples=200, fused U/VS fine-tune): kd_loss 1.42 (step 100) -> best fused loss **0.8477** (final). Checkpoint saved incrementally to fused_weights.pt whenever a new best was hit.
+
+Both output files confirmed in hf://buckets/Devavrat28/star-kv-checkpoints: trained_weights.pt (16,791,060,926 bytes) and fused_weights.pt (16,791,057,896 bytes).
+
+Note: K_comp finished at 61.95%, short of the 69% K-target - phase 1 ended on the alpha-samples=3000 step-count fallback rather than the budget being reached. Overall achieved compression (K~62%, V~49.33%) vs. desired 60% average is close but not exact; not flagging as a discrepancy yet - need to compare against how the paper itself reports achieved-vs-target compression before deciding if this is expected STAR-KV behavior (soft-threshold convergence approaches but doesn't always hit target within a fixed step budget) or worth extending alpha-samples in a follow-up run.
+
+Next: run eval.py on trained_weights.pt (or fused_weights.pt) for PPL (WikiText-2, C4) and zero-shot accuracy, compare against paper's 60%-compression row (Wiki2 8.52, C4 13.51, avg zero-shot 65.42%) and our own measured baseline (Wiki2 7.21, C4 11.40, avg zero-shot 68.49%).
