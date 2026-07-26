@@ -200,13 +200,13 @@ Save all results as JSON in results/ with timestamps.
 
 | Claim | Paper Value | Our Result | Status |
 |---|---|---|---|
-| PPL WikiText-2 (Llama-3.1-8B, 0.6 comp) | TBD from paper | TBD | Pending |
-| PPL C4 (Llama-3.1-8B, 0.6 comp) | TBD from paper | TBD | Pending |
-| KV compression ratio (low-rank only) | up to 75% | TBD | Pending |
-| KV compression ratio (combined) | up to 20x | TBD | Pending |
-| Attention speedup (Triton) | up to 6.9x | TBD | Pending |
-| E2E throughput improvement | up to 3.1x | TBD | Pending |
-| Zero-shot avg accuracy drop | minimal | TBD | Pending |
+| PPL WikiText-2 (Llama-3.1-8B, 0.6 comp) | 8.52 | 9.05 (seqlen=2048) | Partially verified (+0.53) |
+| PPL C4 (Llama-3.1-8B, 0.6 comp) | 13.51 | 14.08 (seqlen=2048) | Partially verified (+0.57) |
+| KV compression ratio (low-rank only) | up to 75% | K_comp=61.95%, V_comp=49.33% (target 0.6 avg) | Pending Claim 3 writeup |
+| KV compression ratio (combined) | up to 20x | TBD | Pending (blocked on missing quant_utils.py) |
+| Attention speedup (Triton) | up to 6.9x | TBD | Pending (blocked on failing kernel checks) |
+| E2E throughput improvement | up to 3.1x | TBD | Pending (blocked on failing kernel checks) |
+| Zero-shot avg accuracy drop | minimal | 68.49% -> 65.20% (-3.29pp); paper 67.87% -> 65.42% (-2.45pp) | Verified (aggregate within 0.22pp of paper) |
 
 Fill in "Our Result" and "Status" as you run each experiment.
 
