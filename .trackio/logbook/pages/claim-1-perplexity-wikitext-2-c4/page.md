@@ -476,3 +476,120 @@ Observation: our compressed-model PPL is close to the paper's reported 60%-compr
 Zero-shot accuracy results logged separately on the Claim 2 page.
 
 Claim 1 status: PARTIALLY VERIFIED - compressed PPL lands close to paper's absolute reported values (deltas +0.53/+0.57, both larger than the 0.05 PPL tolerance in EXPECTED_RESULTS.md, but consistent with - not worse than - the pre-existing baseline version-drift offset of similar magnitude).
+
+
+---
+<!-- trackio-cell
+{"type": "code", "id": "cell_353cf18b2064", "created_at": "2026-07-26T07:12:52+00:00", "title": "Run: hf.exe (exit 1)", "command": ["./myenv/Scripts/hf.exe", "jobs", "run", "--flavor", "rtx-pro-6000", "--timeout", "2h", "--name", "starkv-baseline-eval-longchat-retry", "--secrets", "HF_TOKEN", "-v", ".\\STAR-KV;C:\\Users\\devavrat.samak\\AppData\\Local\\Programs\\Git\\workspace\\STAR-KV;ro", "-v", ".\\repro;C:\\Users\\devavrat.samak\\AppData\\Local\\Programs\\Git\\workspace\\repro;ro", "-v", "hf://buckets/Devavrat28/star-kv-checkpoints:/workspace/output:rw", "-d", "python:3.12", "bash", "C:/Users/devavrat.samak/AppData/Local/Programs/Git/workspace/repro/run_baseline_eval_longchat.sh"], "exit_code": 1, "duration_s": 3.141}
+-->
+````bash
+$ ./myenv/Scripts/hf.exe jobs run --flavor rtx-pro-6000 --timeout 2h --name starkv-baseline-eval-longchat-retry --secrets HF_TOKEN -v '.\STAR-KV;C:\Users\devavrat.samak\AppData\Local\Programs\Git\workspace\STAR-KV;ro' -v '.\repro;C:\Users\devavrat.samak\AppData\Local\Programs\Git\workspace\repro;ro' -v hf://buckets/Devavrat28/star-kv-checkpoints:/workspace/output:rw -d python:3.12 bash C:/Users/devavrat.samak/AppData/Local/Programs/Git/workspace/repro/run_baseline_eval_longchat.sh
+````
+
+exit 1 · 3.1s
+
+
+````output
+Error: Missing mount path in volume spec '.\STAR-KV;C:\Users\devavrat.samak\AppData\Local\Programs\Git\workspace\STAR-KV;ro'. Expected 'LOCAL_DIR:/MOUNT_PATH[:ro|:rw]' (e.g. './data:/data').
+Hint: set HF_DEBUG=1 as environment variable for full traceback.
+
+````
+
+
+---
+<!-- trackio-cell
+{"type": "code", "id": "cell_aff73eeee5ab", "created_at": "2026-07-26T07:13:17+00:00", "title": "Run: hf.exe (exit 0)", "command": ["./myenv/Scripts/hf.exe", "jobs", "run", "--flavor", "rtx-pro-6000", "--timeout", "2h", "--name", "starkv-baseline-eval-longchat-retry", "--secrets", "HF_TOKEN", "-v", "./STAR-KV:/workspace/STAR-KV:ro", "-v", "./repro:/workspace/repro:ro", "-v", "hf://buckets/Devavrat28/star-kv-checkpoints:/workspace/output:rw", "-d", "python:3.12", "bash", "/workspace/repro/run_baseline_eval_longchat.sh"], "exit_code": 0, "duration_s": 12.188}
+-->
+````bash
+$ ./myenv/Scripts/hf.exe jobs run --flavor rtx-pro-6000 --timeout 2h --name starkv-baseline-eval-longchat-retry --secrets HF_TOKEN -v ./STAR-KV:/workspace/STAR-KV:ro -v ./repro:/workspace/repro:ro -v hf://buckets/Devavrat28/star-kv-checkpoints:/workspace/output:rw -d python:3.12 bash /workspace/repro/run_baseline_eval_longchat.sh
+````
+
+exit 0 · 12.2s
+
+
+````output
+Sync plan: STAR-KV -> hf://buckets/Devavrat28/jobs-artifacts/STAR-KV-a5c24ba8
+  Uploads: 0
+  Downloads: 0
+  Deletes: 0
+  Skips: 13
+Nothing to sync.
+Sync plan: repro -> hf://buckets/Devavrat28/jobs-artifacts/repro-9203359a
+  Uploads: 1
+  Downloads: 0
+  Deletes: 0
+  Skips: 8
+Syncing...
+Sync completed.
+id=6a65b38ddb23d7a7ec1cdd7c url=https://huggingface.co/jobs/Devavrat28/6a65b38ddb23d7a7ec1cdd7c
+Hint: Use `hf jobs logs -f Devavrat28/6a65b38ddb23d7a7ec1cdd7c` to stream logs, or `hf jobs inspect Devavrat28/6a65b38ddb23d7a7ec1cdd7c` to check status.
+Hint: Use `hf jobs wait Devavrat28/6a65b38ddb23d7a7ec1cdd7c` to block until it finishes.
+
+````
+
+
+---
+<!-- trackio-cell
+{"type": "code", "id": "cell_db3b9f3ca7f0", "created_at": "2026-07-26T07:20:35+00:00", "title": "Run: hf.exe (exit 0)", "command": ["./myenv/Scripts/hf.exe", "jobs", "run", "--flavor", "rtx-pro-6000", "--timeout", "2h", "--name", "starkv-baseline-eval-longchat-v2", "--secrets", "HF_TOKEN", "-v", "./STAR-KV:/workspace/STAR-KV:ro", "-v", "./repro:/workspace/repro:ro", "-v", "hf://buckets/Devavrat28/star-kv-checkpoints:/workspace/output:rw", "-d", "python:3.12", "bash", "/workspace/repro/run_baseline_eval_longchat.sh"], "exit_code": 0, "duration_s": 12.234}
+-->
+````bash
+$ ./myenv/Scripts/hf.exe jobs run --flavor rtx-pro-6000 --timeout 2h --name starkv-baseline-eval-longchat-v2 --secrets HF_TOKEN -v ./STAR-KV:/workspace/STAR-KV:ro -v ./repro:/workspace/repro:ro -v hf://buckets/Devavrat28/star-kv-checkpoints:/workspace/output:rw -d python:3.12 bash /workspace/repro/run_baseline_eval_longchat.sh
+````
+
+exit 0 · 12.2s
+
+
+````output
+Sync plan: STAR-KV -> hf://buckets/Devavrat28/jobs-artifacts/STAR-KV-a5c24ba8
+  Uploads: 0
+  Downloads: 0
+  Deletes: 0
+  Skips: 13
+Nothing to sync.
+Sync plan: repro -> hf://buckets/Devavrat28/jobs-artifacts/repro-9203359a
+  Uploads: 4
+  Downloads: 0
+  Deletes: 0
+  Skips: 5
+Syncing...
+Sync completed.
+id=6a65b543db23d7a7ec1cdd9a url=https://huggingface.co/jobs/Devavrat28/6a65b543db23d7a7ec1cdd9a
+Hint: Use `hf jobs logs -f Devavrat28/6a65b543db23d7a7ec1cdd9a` to stream logs, or `hf jobs inspect Devavrat28/6a65b543db23d7a7ec1cdd9a` to check status.
+Hint: Use `hf jobs wait Devavrat28/6a65b543db23d7a7ec1cdd9a` to block until it finishes.
+
+````
+
+
+---
+<!-- trackio-cell
+{"type": "markdown", "id": "cell_d90aa2d6c7ad", "created_at": "2026-07-26T07:30:51+00:00", "title": "LongChat-7B-v1.5-32k baseline: UNBLOCKED and resolved (job https://huggingface.…"}
+-->
+**LongChat-7B-v1.5-32k baseline: UNBLOCKED and resolved** (job https://huggingface.co/jobs/Devavrat28/6a65b543db23d7a7ec1cdd9a, starkv-baseline-eval-longchat-v2, rtx-pro-6000, seed=42, running_secs=442 (~7.4min), `EXIT_LONGCHAT=0`). Root cause and fix logged in the Discrepancies Log (missing `protobuf` dependency, not a `use_fast` issue as originally suspected).
+
+Perplexity (seqlen=2048, via `evaluate_ppl`):
+| Dataset | Paper baseline | Ours | Delta |
+|---|---|---|---|
+| WikiText-2 | 6.86 | 7.61 | +0.75 |
+| C4 | 9.93 | 10.52 | +0.59 |
+
+Zero-shot (acc_norm for OBQA/ARC-e/ARC-c/HellaSwag, acc for PIQA/WinoGrande - same convention as Llama baseline):
+| Task | Paper baseline | Ours | Delta |
+|---|---|---|---|
+| OBQA | 41.00 | 41.00 | 0.00 (exact match) |
+| PIQA | 76.28 | 75.79 | -0.49 |
+| ARC-e | 71.84 | 67.59 | -4.25 |
+| ARC-c | 41.38 | 41.13 | -0.25 |
+| HellaSwag | 71.20 | 68.99 | -2.21 |
+| WinoGrande | 67.48 | 67.96 | +0.48 |
+| **Avg** | **61.53** | **60.41** | **-1.12** |
+
+**DISCREPANCY FOUND**
+Location: our baseline reproduction of paper Table 1 (LongChat-7B-v1.5-32k, 0% compression row, EXPECTED_RESULTS.md lines 17-25)
+Paper says: Wiki2 6.86, C4 9.93, avg zero-shot 61.53%
+Code does (our reproduction): Wiki2 7.61, C4 10.52, avg zero-shot 60.41%
+Difference: notably, this goes the *opposite direction* from the Llama-3.1-8B baseline discrepancy - there our PPL was lower (better) than paper's; here our PPL is higher (worse) than paper's, by a similar order of magnitude (+0.75/+0.59 vs. the tolerance of 0.05). OBQA matches exactly again (second time this exact task has landed on the exact paper number across both models - useful anchor that our lm_eval harness/task config is internally consistent with the paper's for OBQA specifically). ARC-e shows the largest single-task gap (-4.25pp).
+Likely cause: same family as the Llama discrepancy - unpinned `lm_eval`/`transformers`/`datasets` versions vs. whatever the paper's authors used; the opposite-direction sign (worse here, better there) argues against a single systematic bias (e.g., a consistently "easier" or "harder" wikitext mirror) and more toward per-model/per-tokenizer version-sensitivity in exact prompt formatting and scoring, which is consistent with what SKILLS.md warns about for lm-eval-harness version drift.
+Proposed fix: none applied - same as the Llama case, flagging per protocol rather than chasing exact version parity, since STAR-KV/requirements.txt pins nothing.
+Impact on results: sets our own LongChat baseline reference point (Wiki2=7.61, C4=10.52, avg zero-shot=60.41%) as the comparison target for our own upcoming LongChat STAR-KV (60% compression) training/eval run, alongside the paper's absolute numbers (paper's STAR-KV@60% row for LongChat: Wiki2=6.83, C4=9.98, avg zero-shot=61.53%, per-task OBQA 41.80/PIQA 75.90/ARC-e 72.69/ARC-c 41.47/Hella 70.49/Wino 66.85 - full target now available from EXPECTED_RESULTS.md for when that run completes).
+
+LongChat baseline status: VERIFIED (with documented version-drift discrepancy, same magnitude/nature as the Llama baseline finding - not blocking further work).

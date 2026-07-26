@@ -100,3 +100,25 @@ Difference: gradient checkpointing (previous fix) only delayed the crash from st
 Likely cause: this genuinely requires 2 GPUs as the authors used - not a bug, a resource requirement inherent to the training design (KD + full fine-tune, not LoRA-style partial training).
 Proposed fix: scale to rtx-pro-6000x2 (2x96GB=192GB, $5.50/hr) and drop our --cuda-devices override so train.py falls back to its own default ("0,1"), letting accelerate's device_map=auto shard both models across both GPUs - this exactly matches the authors' documented hardware rather than working around it. Gradient checkpointing left enabled for extra margin.
 Impact on results: none expected - same training config/hyperparameters, just correct hardware parallelism. Confirmed with user before incurring the added ~$16-22 cost (vs. pennies for the failed single-GPU attempts).
+
+
+---
+<!-- trackio-cell
+{"type": "markdown", "id": "cell_fe53f99fc204", "created_at": "2026-07-26T07:20:04+00:00", "title": "DISCREPANCY FOUND (root cause of LongChat tokenizer failures, resolved)"}
+-->
+**DISCREPANCY FOUND (root cause of LongChat tokenizer failures, resolved)**
+Location: repro/run_baseline_eval_longchat.sh, repro/run_baseline_eval.sh, repro/train_claim1.sh, repro/eval_claim1.sh (our own job pip-install lists, not STAR-KV/)
+
+Paper says: n/a - purely our own job environment setup, not a paper or STAR-KV/ methodology issue.
+
+Code does: `AutoTokenizer.from_pretrained(args.model, use_fast=True)` (called identically in STAR-KV/eval.py, STAR-KV/train.py, STAR-KV/latency.py, and our own baseline_eval.py) needs to convert LongChat's slow sentencepiece tokenizer (`tokenizer_class: LlamaTokenizer`, no `tokenizer.json` shipped in the repo) to a fast tokenizer. Full traceback from retry job https://huggingface.co/jobs/Devavrat28/6a65b38ddb23d7a7ec1cdd7c shows the real mechanism for the first time: transformers first tries `SentencePieceExtractor(vocab_file)`, which requires the `protobuf` package. `protobuf` was never in any of our pip install lists. When that import fails, transformers logs "Falling back to TikToken extractor" and attempts to parse the binary sentencepiece `tokenizer.model` file as a tiktoken BPE file (`token, rank = line.split()`), which chokes on the first non-text byte (`b'\x0e'`) - this is the exact `ValueError: Error parsing line b'\x0e'...` seen in both original attempts.
+
+Difference: earlier session notes attributed this to a transformers/tokenizers fast-tokenizer auto-detection regression and proposed trying `use_fast=False` as an untested next step. That diagnosis was incomplete - the real cause is a missing dependency (`protobuf`), not a version-detection bug, and no code path anywhere needed `use_fast=False`.
+
+**Important caveat on how this was found**: I first tested tokenizer loading locally (Windows, fresh `HF_HOME` cache, identical resolved package versions to the job: transformers 5.14.1/tokenizers 0.22.2/huggingface_hub 1.24.0) and it *succeeded*, which I incorrectly took as evidence the original failure was transient/environment-drift and had "self-resolved." That was a false negative: my local `myenv` already had `protobuf` installed from unrelated earlier work, so `SentencePieceExtractor` succeeded locally and never hit the broken tiktoken fallback path. Only actually re-running the full job on the real container (which has a clean, explicitly-specified pip environment) surfaced the true traceback and the real root cause. Documenting this as a reminder that a local repro passing is not sufficient evidence when the local environment has undeclared extra packages - the job container's exact dependency list is the only trustworthy source of truth here.
+
+Likely cause: Missing dependency in our own job scripts - `protobuf` is required by `transformers`' `SentencePieceExtractor` fast-tokenizer conversion path but is not a declared/transitive dependency pulled in by any package in our install list (`transformers`, `tiktoken`, `sentencepiece` do not require it).
+
+Proposed fix: applied - added `protobuf` to the pip install line in `repro/run_baseline_eval_longchat.sh`, `repro/run_baseline_eval.sh`, `repro/train_claim1.sh`, and `repro/eval_claim1.sh` (the latter two preemptively, since LongChat training/eval will go through STAR-KV/train.py and STAR-KV/eval.py later, which call `AutoTokenizer.from_pretrained` the same way). Not a change to any vendored STAR-KV/ file. Resubmitting the LongChat baseline eval job with the fix.
+
+Impact on results: unblocks LongChat-7B-v1.5-32k baseline eval entirely (was fully blocked before); no impact on already-completed Llama-3.1-8B-Instruct results (Llama's tokenizer already ships a `tokenizer.json` fast file, so it never took this code path and was never affected).
