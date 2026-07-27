@@ -5,7 +5,7 @@
   "space_id": "Devavrat28/star-kv",
   "paper": null,
   "tags": [],
-  "updated_at": "2026-07-26T07:30:51+00:00",
+  "updated_at": "2026-07-27T04:20:48+00:00",
   "root": {
     "slug": "index",
     "title": "Repro: STAR-KV: Low-Rank KV Cache Compression via Soft Thresholding for Adaptive Rank Control",
@@ -68,8 +68,8 @@
     "total_size": 0,
     "bucket_id": "Devavrat28/star-kv-artifacts"
   },
-  "agent_view_tokens": 17846,
+  "agent_view_tokens": 18530,
   "trace_view_tokens": 10,
   "workspace_view_tokens": 8,
-  "revision": "9029bb2737cc26af0e94"
+  "revision": "15f85bfdb9462af6f4b9"
 }

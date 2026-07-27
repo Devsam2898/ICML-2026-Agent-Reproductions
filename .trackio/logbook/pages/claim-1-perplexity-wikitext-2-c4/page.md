@@ -593,3 +593,48 @@ Proposed fix: none applied - same as the Llama case, flagging per protocol rathe
 Impact on results: sets our own LongChat baseline reference point (Wiki2=7.61, C4=10.52, avg zero-shot=60.41%) as the comparison target for our own upcoming LongChat STAR-KV (60% compression) training/eval run, alongside the paper's absolute numbers (paper's STAR-KV@60% row for LongChat: Wiki2=6.83, C4=9.98, avg zero-shot=61.53%, per-task OBQA 41.80/PIQA 75.90/ARC-e 72.69/ARC-c 41.47/Hella 70.49/Wino 66.85 - full target now available from EXPECTED_RESULTS.md for when that run completes).
 
 LongChat baseline status: VERIFIED (with documented version-drift discrepancy, same magnitude/nature as the Llama baseline finding - not blocking further work).
+
+
+---
+<!-- trackio-cell
+{"type": "code", "id": "cell_80d1a65fbb60", "created_at": "2026-07-26T07:40:24+00:00", "title": "Run: hf.exe (exit 0)", "command": ["./myenv/Scripts/hf.exe", "jobs", "run", "--flavor", "rtx-pro-6000x2", "--timeout", "6h", "--name", "starkv-train-claim1-longchat", "--secrets", "HF_TOKEN", "-v", "./STAR-KV:/workspace/STAR-KV:ro", "-v", "./repro:/workspace/repro:ro", "-v", "hf://buckets/Devavrat28/star-kv-checkpoints:/workspace/output:rw", "-d", "python:3.12", "bash", "/workspace/repro/train_claim1_longchat.sh"], "exit_code": 0, "duration_s": 19.391}
+-->
+````bash
+$ ./myenv/Scripts/hf.exe jobs run --flavor rtx-pro-6000x2 --timeout 6h --name starkv-train-claim1-longchat --secrets HF_TOKEN -v ./STAR-KV:/workspace/STAR-KV:ro -v ./repro:/workspace/repro:ro -v hf://buckets/Devavrat28/star-kv-checkpoints:/workspace/output:rw -d python:3.12 bash /workspace/repro/train_claim1_longchat.sh
+````
+
+exit 0 · 19.4s
+
+
+````output
+Sync plan: STAR-KV -> hf://buckets/Devavrat28/jobs-artifacts/STAR-KV-a5c24ba8
+  Uploads: 0
+  Downloads: 0
+  Deletes: 0
+  Skips: 13
+Nothing to sync.
+Sync plan: repro -> hf://buckets/Devavrat28/jobs-artifacts/repro-9203359a
+  Uploads: 1
+  Downloads: 0
+  Deletes: 0
+  Skips: 9
+Syncing...
+Sync completed.
+id=6a65b9e77ef3c08464969801 url=https://huggingface.co/jobs/Devavrat28/6a65b9e77ef3c08464969801
+Hint: Use `hf jobs logs -f Devavrat28/6a65b9e77ef3c08464969801` to stream logs, or `hf jobs inspect Devavrat28/6a65b9e77ef3c08464969801` to check status.
+Hint: Use `hf jobs wait Devavrat28/6a65b9e77ef3c08464969801` to block until it finishes.
+
+````
+
+
+---
+<!-- trackio-cell
+{"type": "markdown", "id": "cell_a34ea1be593c", "created_at": "2026-07-27T04:20:47+00:00", "title": "LongChat-7B-v1.5-32k STAR-KV training: INCOMPLETE - GPU credit exhausted mid-run"}
+-->
+**LongChat-7B-v1.5-32k STAR-KV training: INCOMPLETE - GPU credit exhausted mid-run**
+
+Job https://huggingface.co/jobs/Devavrat28/6a65b9e77ef3c08464969801 (starkv-train-claim1-longchat, rtx-pro-6000x2, same hyperparameters as the successful Llama-3.1-8B-Instruct training run - see repro/train_claim1_longchat.sh) was progressing normally (last confirmed alive at running_secs~8680, ~2h25m in, comparable to the ~3h47m the Llama run took on the same hardware) when its status flipped to `CANCELED` with no completion/duration data. Cause: the HuggingFace GPU credit allocation for this project (ICML-2026-agent-repro org credit) was exhausted, which terminated the job before it could reach Phase 3 / write `trained_weights_longchat.pt` or `fused_weights_longchat.pt`.
+
+No checkpoint was produced - this is a genuine incomplete run, not a code or methodology failure. train_claim1_longchat.sh itself is believed correct (same hyperparameters/hardware profile that succeeded for Llama-3.1-8B-Instruct) and does not need changes; it can be resubmitted as-is once more GPU credit is available.
+
+Claim 1 (LongChat 60%-compression row) status: BLOCKED - pending additional compute credit. Baseline (0% compression) row for LongChat remains verified (see prior cell); only the STAR-KV-compressed row is outstanding for this model.
